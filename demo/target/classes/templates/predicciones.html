@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Predicciones de Estudiantes</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 40px;
+            color: #333;
+        }
+
+        .table-container {
+            width: 90%;
+            max-width: 700px;
+            margin: 20px auto;
+        }
+
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .styled-table th {
+            background-color: #4A90E2;
+            color: white;
+            padding: 14px;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .styled-table td {
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+            color: #333;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .styled-table tr:nth-child(even) td {
+            background-color: #f5f9ff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- TABLA MAT -->
+    <div class="table-container">
+        <h1>Predicciones - Student Mat</h1>
+        <table class="styled-table">
+            <tr>
+                <th># Estudiante</th>
+                <th>Predicción</th>
+            </tr>
+            <tr th:each="pred, iterStat : ${prediccionesMat}">
+                <td th:text="${iterStat.index + 1}"></td>
+                <td th:text="${pred}"></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- TABLA POR -->
+    <div class="table-container">
+        <h1>Predicciones - Student Por</h1>
+        <table class="styled-table">
+            <tr>
+                <th># Estudiante</th>
+                <th>Predicción</th>
+            </tr>
+            <tr th:each="pred, iterStat : ${prediccionesPor}">
+                <td th:text="${iterStat.index + 1}"></td>
+                <td th:text="${pred}"></td>
+            </tr>
+        </table>
+    </div>
+
+</body>
+</html>

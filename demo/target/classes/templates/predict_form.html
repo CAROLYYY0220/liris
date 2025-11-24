@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Encuesta de Predicción Académica</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/css/app.css">
+  <style>
+    :root{
+      --bg:#f3efe6;
+      --panel:#fff6ec;
+      --accent:#8b6b47;
+      --accent-light:#a17f5d;
+      --muted:#7a6a57;
+      --good:#2e7d32;
+      --bad:#c62828;
+      --shadow:0 10px 30px rgba(0,0,0,0.1);
+      --radius:14px;
+      --max-width:720px;
+    }
+
+    body{
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container{
+      width: 100%;
+      max-width: var(--max-width);
+      background: var(--panel);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      padding: 0;
+    }
+
+    /* Header centrado */
+    .header-card{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 20px;
+      background: var(--panel);
+    }
+    .logo--large{
+      width: 70px;
+      height: 70px;
+      border-radius: 12px;
+      font-size: 24px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent);
+      color: #fff;
+      margin-bottom: 12px;
+    }
+    .header-card h1{
+      margin: 0;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--accent);
+      text-align: center;
+    }
+    .header-card p{
+      margin: 6px 0 0 0;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .card-body{
+      padding: 30px 25px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .form-row{
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 12px 16px;
+      align-items: center;
+    }
+    .field-label{
+      font-weight: 700;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .input, select{
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid #dcdcdc;
+      font-size: 15px;
+      width: 100%;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+    }
+    .input:focus, select:focus{
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(139,107,71,0.2);
+      outline: none;
+    }
+
+    .controls{
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+    .btn{
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      color: #fff;
+      background: var(--accent);
+      transition: all 0.2s ease;
+      box-shadow: 0 6px 12px rgba(139,107,71,0.2);
+    }
+    .btn:hover{
+      background: var(--accent-light);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(139,107,71,0.3);
+    }
+    .btn.secondary{
+      background: #fff;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      box-shadow: none;
+    }
+    .btn.secondary:hover{
+      background: var(--accent-light);
+      color: #fff;
+    }
+
+    /* Modal */
+    .overlay{
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.45);
+      z-index: 50;
+    }
+    .overlay.show{ display: flex; }
+    .modal{
+      width: 480px;
+      max-width: 90%;
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+      text-align: center;
+    }
+    .modal h2{
+      margin: 0 0 12px 0;
+      font-size: 22px;
+      color: var(--accent);
+    }
+    .modal .desc{
+      margin: 10px 0 16px 0;
+      font-size: 15px;
+      color: var(--muted);
+    }
+    .modal .actions{
+      margin-top: 16px;
+    }
+    .confidence{
+      margin-top: 12px;
+    }
+    .confidence .bar{
+      height: 14px;
+      background:#eee;
+      border-radius:8px;
+      overflow:hidden;
+    }
+    .confidence .fill{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg,var(--good),#81c784);
+      transition: width 0.3s ease;
+    }
+    .confidence .pct{
+      margin-top:6px;
+      font-weight:700;
+      color:#444;
+      font-size: 14px;
+    }
+
+    @media(max-width:700px){
+      .form-row{
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header con logo centrado -->
+    <div class="header-card">
+      <div class="logo--large">IA</div>
+      <h1>Encuesta de Predicción Académica</h1>
+      <p>Responde la siguiente información para obtener una estimación de tu rendimiento.</p>
+    </div>
+
+    <!-- Card body con formulario -->
+    <div class="card-body">
+      <form id="surveyForm" th:action="@{/predict}" method="post">
+        <div class="form-row">
+          <div class="field-label">Dataset</div>
+          <div>
+            <select name="dataset" class="input">
+              <option value="mat" th:selected="${datasetName=='mat'}">Mat</option>
+              <option value="por" th:selected="${datasetName=='por'}">Por</option>
+            </select>
+          </div>
+        </div>
+
+        <li th:each="att : ${attributes}" class="form-row">
+          <div th:if="${att.class} == false" class="field-label">
+            <span th:switch="${att.name}">
+              <span th:case="'G1'">Nota G1 (primera evaluación)</span>
+              <span th:case="'G2'">Nota G2 (segunda evaluación)</span>
+              <span th:case="'studytime'">Tiempo de estudio</span>
+              <span th:case="'failures'">Fallas previas</span>
+              <span th:case="'absences'">Ausencias</span>
+              <span th:case="'internet'">Internet en casa</span>
+              <span th:case="'higher'">Quiere educación superior</span>
+              <span th:case="'goout'">Salir con amigos</span>
+              <span th:case="*" th:text="${att.name}"></span>
+            </span>
+          </div>
+          <div th:if="${att.class} == false" th:switch="${att.type}">
+            <div th:case="'numeric'"><input class="input" type="number" step="any" th:name="${att.name}" /></div>
+            <div th:case="'nominal'"><select class="input" th:name="${att.name}"><option th:each="v : ${att.values}" th:value="${v}" th:text="${v}"></option></select></div>
+            <div th:case="'string'"><input class="input" type="text" th:name="${att.name}" /></div>
+            <div th:case="*"><input class="input" type="text" th:name="${att.name}" /></div>
+          </div>
+        </li>
+
+        <div class="controls">
+          <button type="submit" class="btn">Predecir</button>
+          <button type="button" id="contrastToggle" class="btn secondary">Alto contraste</button>
+          <button type="button" class="btn secondary" id="exampleFail">Ejemplo: Reprobar</button>
+          <button type="button" class="btn secondary" id="examplePass">Ejemplo: Aprobar</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Modal de resultado -->
+    <div id="resultOverlay" class="overlay" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="modal" id="resultModal">
+        <h2 id="resultTitle">Resultado</h2>
+        <p id="resultMsg" class="desc small"></p>
+        <p id="resultInfo" class="small"></p>
+        <div class="confidence" aria-hidden="false">
+          <div class="bar" aria-hidden="true"><div class="fill" id="confFill" style="width:0%"></div></div>
+          <div class="pct" id="confPct" aria-live="polite">Confianza: —</div>
+        </div>
+        <div class="actions" style="margin-top:14px"><button id="closeModal" class="btn secondary">Cerrar</button></div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const form = document.getElementById('surveyForm');
+    const overlay = document.getElementById('resultOverlay');
+    const title = document.getElementById('resultTitle');
+    const msg = document.getElementById('resultMsg');
+    const info = document.getElementById('resultInfo');
+    const closeBtn = document.getElementById('closeModal');
+
+    form.addEventListener('submit', async function(e){
+      e.preventDefault();
+      const submitBtn = form.querySelector('button[type=submit]');
+      const fd = new FormData(form);
+      const params = new URLSearchParams();
+      for (const pair of fd.entries()) params.append(pair[0], pair[1]);
+      if (!submitBtn.disabled) submitBtn.disabled = true;
+      submitBtn.textContent = 'Procesando...';
+      try{
+        const res = await fetch('/api/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+          body: params.toString()
+        });
+        const json = await res.json();
+        const resultado = json.resultado || 'desconocido';
+        const label = json.predLabel || '';
+        const conf = (typeof json.confidence === 'number') ? json.confidence : 0;
+        if (resultado === 'aprobado') {
+            title.textContent = '¡Aprobado!';
+            msg.textContent = '¡Gran trabajo! Sigue con ese ritmo y lo lograrás.';
+        } else if (resultado === 'desaprobado') {
+            title.textContent = 'Podrías suspender';
+            msg.textContent = 'No te desanimes: aumentar horas de estudio o reducir faltas ayuda mucho.';
+        } else {
+            title.textContent = 'Resultado';
+            msg.textContent = '';
+        }
+        info.textContent = `Etiqueta del modelo: ${label}`;
+        const pct = Math.max(0, Math.min(1, conf));
+        const pctText = (pct*100).toFixed(1) + '%';
+        const fill = document.getElementById('confFill');
+        const pctEl = document.getElementById('confPct');
+        if (fill) fill.style.width = pctText;
+        if (pctEl) pctEl.textContent = `Confianza: ${pctText}`;
+        overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false');
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Predecir'; }
+      } catch(err){
+          title.textContent = 'Error';
+          msg.textContent = err.message || String(err);
+          overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false');
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Predecir'; }
+      }
+    });
+
+    closeBtn.addEventListener('click', function(){ overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); });
+
+    document.getElementById('contrastToggle').addEventListener('click', function(){
+      document.documentElement.classList.toggle('high-contrast');
+      const is = document.documentElement.classList.contains('high-contrast');
+      this.textContent = is ? 'Modo normal' : 'Alto contraste';
+      this.setAttribute('aria-pressed', is);
+    });
+
+    document.getElementById('exampleFail').addEventListener('click', function(){
+      const set = (n,v)=>{ const e=document.getElementsByName(n)[0]; if(e) e.value=v; };
+      set('G1','5'); set('G2','4'); set('studytime','1'); set('failures','2'); set('absences','12'); set('internet','no'); set('higher','no'); set('goout','5');
+    });
+
+    document.getElementById('examplePass').addEventListener('click', function(){
+      const set = (n,v)=>{ const e=document.getElementsByName(n)[0]; if(e) e.value=v; };
+      set('G1','13'); set('G2','14'); set('studytime','3'); set('failures','0'); set('absences','1'); set('internet','yes'); set('higher','yes'); set('goout','2');
+    });
+  </script>
+</body>
+</html>

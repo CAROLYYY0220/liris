@@ -1,0 +1,108 @@
+/* Restyled to match earlier compact, earthy design while keeping functional fixes */
+:root{
+  --bg:#f3efe6;
+  --panel:#fff6ec;
+  --accent:#8b6b47;
+  --muted:#7a6a57;
+  --good:#2e7d32;
+  --bad:#c62828;
+  --shadow:0 6px 18px rgba(0,0,0,0.06);
+  --radius:12px;
+  --max-width:720px;
+}
+
+html,body{height:100%;}
+.body{
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+html,body{height:100%;}
+body{
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  background:var(--bg);
+  color:var(--muted);
+  margin:0; padding:24px; display:flex; align-items:center; justify-content:center; min-height:100vh;
+}
+.container{ width:100%; max-width:var(--max-width); margin:0 auto; display:flex; justify-content:center }
+.header{ display:flex; align-items:center; gap:12px; margin-bottom:12px }
+.logo{ width:48px; height:48px; background:var(--accent); border-radius:8px; display:flex;align-items:center;justify-content:center; font-weight:700; color:#fff }
+.title{ font-size:18px; color:var(--accent); margin:0 }
+.subtitle{ font-size:13px; color:#6e6256; margin:0 }
+
+.card{ background:var(--panel); border-radius:14px; box-shadow:0 18px 36px rgba(35,28,21,0.10); padding:28px 24px; width:100%; box-sizing:border-box }
+.card-header{ display:flex; gap:14px; align-items:center; margin-bottom:12px }
+.logo--large{ width:64px; height:64px; border-radius:10px; font-size:18px; display:flex; align-items:center; justify-content:center; background:var(--accent); color:#fff; font-weight:700 }
+.card-title{ font-size:28px; color:var(--accent); margin:0; font-weight:800 }
+.card .subtitle{ margin:4px 0 0 0; color:#6e6256 }
+.card-header{ display:flex; gap:12px; align-items:center; margin-bottom:12px }
+.logo--large{ width:68px; height:68px; border-radius:12px; font-size:18px; }
+.card-title{ font-size:22px; color:var(--accent); margin:0 0 4px 0 }
+.card .subtitle{ margin:0; color:#6e6256 }
+.card{ padding:22px 20px 18px 20px }
+.form-grid{ display:block }
+.form-row{ display:grid; grid-template-columns: 200px 1fr; gap:8px 18px; align-items:center; padding:10px 8px }
+.form-row:last-child{ margin-bottom:2px }
+.field-label{ justify-self:start; text-align:left; padding-left:8px; color:var(--muted); font-weight:700 }
+.field-label{ color:var(--accent); font-weight:700; font-size:13px }
+.input, select{ width:100%; padding:10px 12px; border-radius:8px; border:1px solid #e6ddd4; background:#fff; color:#333; box-sizing:border-box; height:38px }
+.input[type=number]{ max-width:140px }
+.controls{ display:flex; gap:10px; margin-top:18px; align-items:center; justify-content:flex-end }
+.btn{ background:var(--accent); color:#fff; border:0; padding:10px 18px; border-radius:10px; cursor:pointer; font-weight:700; box-shadow:0 6px 18px rgba(139,107,71,0.12) }
+.btn.secondary{ background:transparent; color:var(--accent); border:1px solid #e8e0d6; padding:8px 14px; border-radius:10px }
+.btn:hover{ transform:translateY(-1px) }
+.small{ font-size:0.92rem; color:#6f665c }
+
+/* Modal (lighter, compact) */
+.overlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(10,8,6,0.45); z-index:60 }
+.overlay.show{ display:flex }
+.modal{ width:520px; max-width:92%; background:#fff; border-radius:12px; padding:16px; box-shadow:0 20px 50px rgba(0,0,0,0.18); transform:scale(.98); transition:transform .22s ease, opacity .22s ease }
+.overlay.show .modal{ transform:scale(1); opacity:1 }
+.modal h2{ margin:0 0 8px 0; font-size:18px }
+.modal .desc{ margin:8px 0 12px 0; color:#555 }
+.modal .actions{ text-align:right }
+
+/* Confidence bar */
+.confidence{ margin-top:10px }
+.confidence .bar{ height:12px; background:#eee; border-radius:8px; overflow:hidden }
+.confidence .fill{ height:100%; width:0%; background:linear-gradient(90deg,var(--good),#7fbf7f); transition:width .36s ease }
+
+/* Results table card */
+.results-card{ margin-top:20px; background:linear-gradient(180deg,#ffffff, #fffaf2); padding:18px; border-radius:12px; box-shadow:0 10px 30px rgba(18,14,10,0.06) }
+.results-title{ margin:0 0 12px 0; font-size:16px; color:var(--accent); font-weight:700 }
+.results-body{ overflow:auto }
+#resultsTable{ width:100%; border-collapse:collapse; font-size:14px }
+#resultsTable thead th{ text-align:left; padding:10px 12px; background:transparent; color:var(--muted); font-weight:700 }
+#resultsTable tbody td{ padding:10px 12px; border-top:1px solid #f0e9e0; color:#3f3530 }
+#resultsTable tbody tr:nth-child(even){ background:rgba(0,0,0,0.02) }
+#resultsTable tbody tr:hover{ background:rgba(139,107,71,0.03) }
+
+/* Responsive: stack labels above inputs on narrow screens */
+@media (max-width:700px){
+  .form-row{ grid-template-columns: 1fr; }
+  .field-label{ justify-self:start; text-align:left; padding-left:0 }
+  .controls{ justify-content:flex-start }
+}
+.confidence .pct{ margin-top:6px; font-weight:700; color:#444 }
+
+/* Accessibility */
+button:focus, .input:focus, select:focus{ outline:3px solid rgba(139,107,71,0.12); outline-offset:3px }
+
+/* Responsive */
+@media (max-width:700px){ .form-grid{ grid-template-columns: 1fr } .logo{ display:none } }
+
+/* High contrast mode: toggled by adding 'high-contrast' class on <html>
+   Keep the original earthy accent but boost contrast: darker text, clearer borders,
+   slightly lighter card background and stronger button focus. */
+.high-contrast body {
+  background: #ffffff !important;
+  color: #0b0b0b !important;
+}
+.high-contrast .card {
+  background: #fffdf8 !important;
+  color: #0b0b0b !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12) !important;
+}
+.high-contrast .logo { background: #f4c95a !important; color:#000 !important }
+.high-contrast .btn { background: var(--accent) !important; color: #fff !important; box-shadow: 0 4px 10px rgba(0,0,0,0.12) }
+.high-contrast .btn.secondary { border-color: var(--accent) !important; color:var(--accent) !important }
+.high-contrast .input, .high-contrast select { background:#ffffff !important; color:#0b0b0b !important; border-color:#bfb6aa !important }
+.high-contrast .confidence .fill { background: linear-gradient(90deg,var(--good),#7fbf7f) !important }

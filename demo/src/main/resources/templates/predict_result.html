@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Encuesta — Predicción</title>
+
+    <!-- Hoja de estilos profesional creada por la IA -->
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Predicción del Rendimiento</h1>
+
+    <form id="predictForm">
+
+        <label>Horas de estudio</label>
+        <input type="number" id="studyHours" min="0" required>
+
+        <label>Ausencias</label>
+        <input type="number" id="absences" min="0" required>
+
+        <label>Salidas sociales por semana</label>
+        <input type="number" id="social" min="0" required>
+
+        <button type="submit">Predecir</button>
+    </form>
+</div>
+
+<!-- Modal y overlay generados según tu descripción -->
+
+<div id="resultOverlay">
+    <div id="resultModal">
+        <h2 id="resultTitle"></h2>
+        <p id="resultMsg"></p>
+
+        <div id="confidenceBarContainer">
+            <div id="confidenceBar"></div>
+        </div>
+
+        <p id="resultInfo"></p>
+
+        <button id="closeModal">Cerrar</button>
+    </div>
+</div>
+
+<!-- Script reconstruido según lo que la IA dijo -->
+<script>
+document.getElementById("predictForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const body = {
+        studyHours: Number(document.getElementById("studyHours").value),
+        absences: Number(document.getElementById("absences").value),
+        social: Number(document.getElementById("social").value)
+    };
+
+    const res = await fetch("/api/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+    });
+
+    const data = await res.json();
+
+    document.getElementById("resultTitle").innerText = data.label === "aprobado" ? "¡Aprobado!" : "Desaprobado";
+    document.getElementById("resultMsg").innerText = data.message;
+
+    // Barra de confianza
+    document.getElementById("confidenceBar").style.width = data.confidence + "%";
+    document.getElementById("resultInfo").innerText = "Confianza del modelo: " + data.confidence + "%";
+
+    // Mostrar modal
+    document.getElementById("resultOverlay").style.display = "flex";
+});
+
+document.getElementById("closeModal").onclick = () => {
+    document.getElementById("resultOverlay").style.display = "none";
+};
+</script>
+
+</body>
+</html>

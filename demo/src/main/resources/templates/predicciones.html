@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Predicciones de Estudiantes</title>
+    <style>
+        table { border-collapse: collapse; width: 50%; margin-bottom: 30px; }
+        th, td { border: 1px solid #333; padding: 8px; text-align: center; }
+        th { background-color: #eee; }
+    </style>
+</head>
+<body>
+    <h1>Predicciones - Student Mat</h1>
+    <table>
+        <tr><th># Estudiante</th><th>Predicción</th></tr>
+        <tr th:each="pred, iterStat : ${prediccionesMat}">
+            <td th:text="${iterStat.index + 1}"></td>
+            <td th:text="${pred}"></td>
+        </tr>
+    </table>
+
+    <h1>Predicciones - Student Por</h1>
+    <table>
+        <tr><th># Estudiante</th><th>Predicción</th></tr>
+        <tr th:each="pred, iterStat : ${prediccionesPor}">
+            <td th:text="${iterStat.index + 1}"></td>
+            <td th:text="${pred}"></td>
+        </tr>
+    </table>
+</body>
+</html>
